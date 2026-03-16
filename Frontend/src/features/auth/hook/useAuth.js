@@ -1,34 +1,50 @@
-import { useDispatch } from "react-redux"
-import { setLoading, setUser } from "../auth.slice"
-import {register, login, getMe} from "../service/auth.api"
+import { useDispatch } from "react-redux";
+import { setError, setLoading, setUser } from "../auth.slice";
+import { register, login, getMe } from "../service/auth.api";
 
+export const useAuth = () => {
+  const dispatch = useDispatch();
 
-
-export const useAuth = ()=> {
-    const dispatch = useDispatch()
-
-    async function handleRegister({username, email, password}) {
-        dispatch(setLoading(true))
-        const data = await register({username, email, password})
-        dispatch(setUser(data.user))
-        dispatch(setLoading(false))
+  async function handleRegister({ username, email, password }) {
+    try {
+      dispatch(setLoading(true));
+      const data = await register({ username, email, password });
+    } catch (error) {
+      dispatch(setError(error.response?.data?.message || "Register failed"));
+    } finally {
+      dispatch(setLoading(false));
     }
+  }
 
-    async function handleLogin({email, password}) {
-        dispatch(setLoading(true))
-        const data = await login({email, password})
-        dispatch(setUser(data.user))
-        dispatch(setLoading(false))
+  async function handleLogin({ email, password }) {
+    try {
+      dispatch(setLoading(true));
+      const data = await login({ email, password });
+      dispatch(setUser(data.user));
+    } catch (error) {
+      dispatch(setError(error.response?.data?.message || "Login failed"));
+    } finally {
+      dispatch(setLoading(false));
     }
+  }
 
-    async function handleGetMe() {
-        dispatch(setLoading(true))
-        const data = await getMe()
-        dispatch(setUser(data.user))
-        dispatch(setLoading(false))
+  async function handleGetMe() {
+    try {
+      dispatch(setLoading(true));
+      const data = await getMe();
+      dispatch(setUser(data.user));
+    } catch (error) {
+      dispatch(
+        setError(error.response?.data?.message || "Failed to fetch user data"),
+      );
+    } finally {
+      dispatch(setLoading(false));
     }
+  }
 
-    return {
-        handleRegister, handleLogin, handleGetMe
-    }
-}
+  return {
+    handleRegister,
+    handleLogin,
+    handleGetMe,
+  };
+};

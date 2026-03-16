@@ -8,10 +8,12 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const user = useSelector(state=> state.auth)
+  const user = useSelector((state) => state.auth.user);
+  const loading = useSelector((state) => state.auth.loading);
 
-  const {handleLogin} = useAuth()
-  const navigate = useNavigate()
+  const { handleLogin } = useAuth();
+
+  const navigate = useNavigate();
 
   const submitForm = async (event) => {
     event.preventDefault();
@@ -21,9 +23,13 @@ const Login = () => {
       password,
     };
 
-    await handleLogin(payload)
-    navigate("/")
+    await handleLogin(payload);
+    navigate("/");
   };
+
+  if (!loading && user) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <section className="min-h-screen bg-zinc-950 px-4 py-10 text-zinc-100 sm:px-6 lg:px-8">
