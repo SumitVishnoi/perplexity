@@ -8,8 +8,8 @@ const chatSchema = new mongoose.Schema({
     },
     title: {
         type: String,
-        required: true,
-        trim: true
+        default: "New Chat",
+        trim: true,
     },
 }, {timestamps: true})
 
