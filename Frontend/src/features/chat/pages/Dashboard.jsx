@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { useSelector } from "react-redux";
 import { useChat } from "../hook/useChat";
+import logo from "../../../../public/logo.png"
+import remarkGfm from 'remark-gfm';
 
 const Dashboard = () => {
   const chat = useChat();
@@ -27,17 +29,17 @@ const Dashboard = () => {
   };
 
   const openChat = (chatId) => {
-    chat.handleOpenChat(chatId);
+    chat.handleOpenChat(chatId, chats);
   };
 
   return (
     // 
     <main className="min-h-screen w-full text-white">
-      <section className="mx-auto flex h-screen w-full gap-4 border bg-[#07090f] md:gap-6 border-none">
+      <section className="mx-auto flex h-screen w-full gap-4 border bg-[#07090f] md:gap-6 border-none p-2">
         <aside className="hidden relative h-full w-72 shrink-0 border-r bg-[#080b12] p-4 md:flex md:flex-col">
-          <h1 className="mb-5 text-3xl font-semibold tracking-tight">
-            Perplexity
-          </h1>
+          <img src={logo} className="mb-5 text-3xl font-semibold tracking-tight">
+            
+          </img>
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2 hover:bg-[#2a2a2a72] px-3 py-2 rounded-xl cursor-pointer">
               <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M14 3V5H4V18.3851L5.76282 17H20V10H22V18C22 18.5523 21.5523 19 21 19H6.45455L2 22.5V4C2 3.44772 2.44772 3 3 3H14ZM19 3V0H21V3H24V5H21V8H19V5H16V3H19Z"></path></svg>
@@ -84,7 +86,7 @@ const Dashboard = () => {
                 className={`max-w-[82%] w-fit rounded-2xl px-4 py-3 text-sm md:text-base ${
                   message.role === "user"
                     ? "ml-auto rounded-br-none bg-white/12 text-white"
-                    : "mr-auto border border-white/25 bg-[#0f1626] text-white/90"
+                    : "mr-auto text-white/90"
                 }`}
               >
                 {message.role === "user" ? (
@@ -112,6 +114,7 @@ const Dashboard = () => {
                         </pre>
                       ),
                     }}
+                    remarkPlugins={[remarkGfm]}
                   >
                     {message.content}
                   </ReactMarkdown>
@@ -120,22 +123,22 @@ const Dashboard = () => {
             ))}
           </div>
 
-          <footer className="rounded-3xl w-full absolute bottom-2 p-4 md:p-5">
+          <footer className=" w-full absolute bottom-2 p-4 md:p-5">
             <form
               onSubmit={handleSubmitMessage}
-              className="flex flex-col gap-3 md:flex-row"
+              className="flex flex-col gap-3 md:flex-row bg-[#171f31] rounded-full "
             >
               <input
                 type="text"
                 value={chatInput}
                 onChange={(event) => setChatInput(event.target.value)}
                 placeholder="Type your message..."
-                className="w-full rounded-2xl border border-white/50 bg-transparent px-4 py-3 text-lg text-white outline-none transition placeholder:text-white/45 focus:border-white/90"
+                className="w-full bg-transparent px-8 py-3 text-lg text-white outline-none transition placeholder:text-white/45 focus:border-white/90"
               />
               <button
                 type="submit"
                 disabled={!chatInput.trim()}
-                className="rounded-2xl bg-[#010c28] border border-white/60 px-6 py-3 text-lg font-semibold text-white transition hover:bg-[#010c28]/60 disabled:cursor-not-allowed disabled:opacity-0"
+                className="rounded-2xl px-6 py-3 text-lg font-semibold text-white transition hover:bg-[#010c28]/60 disabled:cursor-not-allowed disabled:opacity-0"
               >
                 Send
               </button>
